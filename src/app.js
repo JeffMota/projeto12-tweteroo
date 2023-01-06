@@ -2,18 +2,8 @@ import express from 'express'
 import cors from 'cors'
 
 let tweeteroo = {
-    usuarios: [
-        {
-            username: 'Jeff',
-            avatar: 'https://img.ibxk.com.br/2022/05/29/29235118645098.jpg'
-        }
-    ],
-    tweets: [
-        {
-            username: 'Jeff',
-            tweet: '11'
-        },
-    ]
+    usuarios: [],
+    tweets: []
 }
 
 const server = express()
@@ -44,6 +34,9 @@ server.post('/tweets', (req, res) => {
 
 server.get('/tweets', (req, res) =>{
     let tweets = []
+    if(tweeteroo.tweets.length == 0){
+        res.send(tweets)
+    }
     if(tweeteroo.tweets.length > 10){
         for(let i = tweeteroo.tweets.length-1; i >= tweeteroo.tweets.length-10; i--){
             let user = tweeteroo.usuarios.find(elm => elm.username === tweeteroo.tweets[i].username)
