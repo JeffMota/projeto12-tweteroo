@@ -49,23 +49,55 @@ server.post('/tweets', (req, res) => {
 //Buscar ultimos 10 tweets
 server.get('/tweets', (req, res) =>{
     let tweets = []
+    const lengthT = tweeteroo.tweets.length
+
+    //Query Strings
+    let page = parseInt(req.query.page)
+    if(page === undefined){
+        page = 1
+    }
+    if(page < 1){
+        res.status(400).send('Informe uma página válida!')
+    }
+
     if(tweeteroo.tweets.length == 0){
         res.send(tweets)
     }
-    if(tweeteroo.tweets.length > 10){
-        for(let i = tweeteroo.tweets.length-1; i >= tweeteroo.tweets.length-10; i--){
-            let user = tweeteroo.usuarios.find(elm => elm.username === tweeteroo.tweets[i].username)
-            let aux = tweeteroo.tweets[i]
-            aux.avatar = user.avatar
-            tweets.push(aux)
+
+    if(lengthT >= 10){
+        if(Math.floor(lengthT / 10) >= page){
+            for(let i = lengthT-((page-1)*10)-1; i > lengthT-1-((page-1)*10)-10; i--){
+                let user = tweeteroo.usuarios.find(elm => elm.username === tweeteroo.tweets[i].username)
+                let aux = tweeteroo.tweets[i]
+                aux.avatar = user.avatar
+                tweets.push(aux)
+            }
+        }
+        else{
+            for(let i = lengthT-((page-1)*10)-1; i > lengthT-1-((page-1)*10) - lengthT % 10; i--){
+                let user = tweeteroo.usuarios.find(elm => elm.username === tweeteroo.tweets[i].username)
+                let aux = tweeteroo.tweets[i]
+                aux.avatar = user.avatar
+                tweets.push(aux)
+            }
         }
     }
     else{
-        for(let i = 0; i < tweeteroo.tweets.length; i++){
-            let user = tweeteroo.usuarios.find(elm => elm.username === tweeteroo.tweets[i].username)
-            let aux = tweeteroo.tweets[i]
-            aux.avatar = user.avatar
-            tweets.push(aux)
+        if(lengthT % 10 != 0){
+            for(let i = lengthT-1-((page-1)*10); i >= 0; i--){
+                let user = tweeteroo.usuarios.find(elm => elm.username === tweeteroo.tweets[i].username)
+                let aux = tweeteroo.tweets[i]
+                aux.avatar = user.avatar
+                tweets.push(aux)
+            }
+        }
+        else{
+            for(let i = lengthT-1-((page-1)*10); i >= lengthT % 10 ; i--){
+                let user = tweeteroo.usuarios.find(elm => elm.username === tweeteroo.tweets[i].username)
+                let aux = tweeteroo.tweets[i]
+                aux.avatar = user.avatar
+                tweets.push(aux)
+            }
         }
     }
     res.send(tweets)
