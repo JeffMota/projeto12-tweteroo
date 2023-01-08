@@ -12,6 +12,7 @@ server.use(express.json())
 
 const PORT = 5000
 
+//Login
 server.post('/sign-up', (req, res) => {
     let user = req.body
 
@@ -26,6 +27,7 @@ server.post('/sign-up', (req, res) => {
     res.status(201).send('OK')
 })
 
+//Envio de tweets
 server.post('/tweets', (req, res) => {
     let body = req.body
 
@@ -44,6 +46,7 @@ server.post('/tweets', (req, res) => {
     }
 })
 
+//Buscar ultimos 10 tweets
 server.get('/tweets', (req, res) =>{
     let tweets = []
     if(tweeteroo.tweets.length == 0){
@@ -66,6 +69,30 @@ server.get('/tweets', (req, res) =>{
         }
     }
     res.send(tweets)
+})
+
+//Buscar tweets por usuarios
+server.get('/tweets/:username', (req, res) => {
+    const username = req.params.username
+    let tweets = []
+    let user = tweeteroo.usuarios.find(elm => elm.username === username)
+
+    if(!user){
+        res.status(404).send('Usuário não encontrado')
+    }
+
+    let avatar = user.avatar
+
+    tweeteroo.tweets.forEach(tweet => {
+        if(tweet.username === username){
+            let aux = tweet
+            aux.avatar = avatar
+            tweets.push(aux)
+        }
+    })
+
+    res.send(tweets)
+
 })
 
 server.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`))
