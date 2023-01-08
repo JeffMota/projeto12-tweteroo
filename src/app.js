@@ -17,7 +17,7 @@ server.post('/sign-up', (req, res) => {
     let user = req.body
 
     //Validação
-    if(!user.username || !user.avatar){
+    if(!user.username || !user.avatar || !isNaN(user.username) || !isNaN(user.avatar)){
         res.status(400).send('Todos os campos são obrigatórios!')
     }
 
@@ -30,9 +30,10 @@ server.post('/sign-up', (req, res) => {
 //Envio de tweets
 server.post('/tweets', (req, res) => {
     let body = req.body
+    const username = req.params.username
 
     //Validação
-    if(!body.username || !body.tweet){
+    if(!username || !body.tweet || !isNaN(body.tweet)){
         res.status(400).send('Todos os campos são obrigatórios!')
     }
 
