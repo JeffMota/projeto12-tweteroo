@@ -60,7 +60,7 @@ server.get('/tweets', (req, res) =>{
         res.status(400).send('Informe uma página válida!')
     }
 
-    if(tweeteroo.tweets.length == 0){
+    if(lengthT == 0){
         res.send(tweets)
     }
 
@@ -83,21 +83,11 @@ server.get('/tweets', (req, res) =>{
         }
     }
     else{
-        if(lengthT % 10 != 0){
-            for(let i = lengthT-1-((page-1)*10); i >= 0; i--){
-                let user = tweeteroo.usuarios.find(elm => elm.username === tweeteroo.tweets[i].username)
-                let aux = tweeteroo.tweets[i]
-                aux.avatar = user.avatar
-                tweets.push(aux)
-            }
-        }
-        else{
-            for(let i = lengthT-1-((page-1)*10); i >= lengthT % 10 ; i--){
-                let user = tweeteroo.usuarios.find(elm => elm.username === tweeteroo.tweets[i].username)
-                let aux = tweeteroo.tweets[i]
-                aux.avatar = user.avatar
-                tweets.push(aux)
-            }
+        for(let i = lengthT-1; i >= 0; i--){
+            let user = tweeteroo.usuarios.find(elm => elm.username === tweeteroo.tweets[i].username)
+            let aux = tweeteroo.tweets[i]
+            aux.avatar = user.avatar
+            tweets.push(aux)
         }
     }
     res.send(tweets)
