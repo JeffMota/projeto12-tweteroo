@@ -14,21 +14,33 @@ const PORT = 5000
 
 server.post('/sign-up', (req, res) => {
     let user = req.body
+
+    //Validação
+    if(!user.username || !user.avatar){
+        res.status(400).send('Todos os campos são obrigatórios!')
+    }
+
     user.id = tweeteroo.usuarios.length+1
     tweeteroo.usuarios.push(user)
 
-    res.send('OK')
+    res.status(201).send('OK')
 })
 
 server.post('/tweets', (req, res) => {
     let body = req.body
+
+    //Validação
+    if(!body.username || !body.tweet){
+        res.status(400).send('Todos os campos são obrigatórios!')
+    }
+
     if(tweeteroo.usuarios.find(elm => elm.username === body.username)){
         body.id = tweeteroo.tweets.length +1
         tweeteroo.tweets.push(body)
-        res.send('OK')
+        res.status(201).send('OK')
     }
     else{
-        res.send('UNAUTHORIZED')
+        res.sendStatus(401)
     }
 })
 
