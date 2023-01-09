@@ -31,9 +31,12 @@ server.post('/sign-up', (req, res) => {
 server.post('/tweets', (req, res) => {
     let body = req.body
     const username = req.params.username
+    if(!username){
+        username = body.username
+    }
 
     //Validação
-    if(!username || !body.tweet || !isNaN(body.tweet)){
+    if(!username || !body.tweet || typeof(body.tweet) != 'string'){
         res.status(400).send('Todos os campos são obrigatórios!')
     }
 
