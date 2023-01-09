@@ -30,17 +30,18 @@ server.post('/sign-up', (req, res) => {
 //Envio de tweets
 server.post('/tweets', (req, res) => {
     let body = req.body
-    const username = req.params.username
-    if(!username){
-        username = body.username
-    }
+    let username = req.headers.user
+    // if(!username){
+    //     username = body.username
+    // }
+    console.log(req.headers)
 
     //Validação
     if(!username || !body.tweet || typeof(body.tweet) != 'string'){
         res.status(400).send('Todos os campos são obrigatórios!')
     }
 
-    if(tweeteroo.usuarios.find(elm => elm.username === body.username)){
+    if(tweeteroo.usuarios.find(elm => elm.username === username)){
         body.id = tweeteroo.tweets.length +1
         tweeteroo.tweets.push(body)
         res.status(201).send('OK')
