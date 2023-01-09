@@ -60,7 +60,7 @@ server.get('/tweets', (req, res) =>{
 
     //Query Strings
     let page = parseInt(req.query.page)
-    if(page === undefined){
+    if(!page){
         page = 1
     }
     if(page < 1){
