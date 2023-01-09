@@ -31,10 +31,9 @@ server.post('/sign-up', (req, res) => {
 server.post('/tweets', (req, res) => {
     let body = req.body
     let username = req.headers.user
-    // if(!username){
-    //     username = body.username
-    // }
-    console.log(req.headers)
+    if(!username){
+        username = body.username
+    }
 
     //Validação
     if(!username || !body.tweet || typeof(body.tweet) != 'string'){
@@ -43,6 +42,9 @@ server.post('/tweets', (req, res) => {
 
     if(tweeteroo.usuarios.find(elm => elm.username === username)){
         body.id = tweeteroo.tweets.length +1
+        if(!body.username){
+            body.username = username
+        }
         tweeteroo.tweets.push(body)
         res.status(201).send('OK')
     }
@@ -88,7 +90,7 @@ server.get('/tweets', (req, res) =>{
         }
     }
     else{
-        for(let i = lengthT-1; i >= 0; i--){
+        for(let i = tweeteroo.tweets.length-1; i >= 0; i--){
             let user = tweeteroo.usuarios.find(elm => elm.username === tweeteroo.tweets[i].username)
             let aux = tweeteroo.tweets[i]
             aux.avatar = user.avatar
